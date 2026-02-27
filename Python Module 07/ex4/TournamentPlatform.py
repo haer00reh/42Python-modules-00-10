@@ -35,7 +35,12 @@ class TournamentPlatform:
                 'rating': winner.calculate_rating(),
                 'rank': winner.get_rank_info()
             })
-
+            self.matches.append({
+                'winner': winner.name,
+                'loser': loser.name,
+                'winner_rating': winner.calculate_rating(),
+                'loser_rating': loser.calculate_rating()
+            })
             return {
                 'winner': winner.name,
                 'loser': loser.name,
@@ -59,7 +64,7 @@ class TournamentPlatform:
                       for card in self.cards.values()) / total
             return {
                 "total_cards": total,
-                "total_matches": len(self.matches),
+                "matches_played": len(self.matches),
                 "average_rating": avg,
                 "platform_status": "active"
             }
@@ -67,7 +72,7 @@ class TournamentPlatform:
             print(f"Error generating report: {e}")
             return {
                 "total_cards": 0,
-                "total_matches": 0,
+                "matches_played": 0,
                 "average_rating": 0,
                 "platform_status": "error"
             }

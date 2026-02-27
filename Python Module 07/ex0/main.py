@@ -3,7 +3,9 @@ from ex0.CreatureCard import CreatureCard
 try:
     fire_dragon = CreatureCard('Fire Dragon', 5, 'Legendary', 7, 5)
     print(f"""=== DataDeck Card Foundation ===
+
 Testing Abstract Base Class Design:
+
 CreatureCard Info:
 {fire_dragon.get_card_info()}
 

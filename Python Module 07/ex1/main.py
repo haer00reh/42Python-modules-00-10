@@ -13,7 +13,8 @@ try:
     decks.add_card(art_card)
     decks.add_card(CreatureCard('Fire Dragon', 5, 'Legendary', 5, 4))
 
-    print(f"""=== DataDeck Deck Builder ===
+    print(f"""\n=== DataDeck Deck Builder ===
+
 Building deck with different card types...
 Deck stats: {decks.get_deck_stats()}
 Drawing and playing cards:
