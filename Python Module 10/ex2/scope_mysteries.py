@@ -33,11 +33,9 @@ def memory_vault() -> dict[str, Callable]:
     spell_mem = {}
 
     def store(key: str, value: str) -> None:
-        nonlocal spell_mem
         spell_mem[key] = value
 
     def recall(key: str) -> str:
-        nonlocal spell_mem
         if key not in spell_mem:
             return "Memory not found"
         return spell_mem[key]
