@@ -1,7 +1,10 @@
 import functools
 import operator
+from functools import singledispatch
+from typing import Callable
 
-def spell_reducer(spells: list[int], operation: str) -> int:
+
+def spell_reducer(spells: list[int], operation: str) -> int | str:
     operations = {
         "min": min,
         "max": max,
@@ -12,56 +15,67 @@ def spell_reducer(spells: list[int], operation: str) -> int:
     if operation not in operations:
         return "unknown operation"
 
-    return functools.reduce(operations[operation], spells)
+    try:
+        return functools.reduce(operations[operation], spells)
+    except TypeError:
+        return "unknown operation"
 
-    
 
-def base_enchantment(power, element, target):
+def base_enchantment(power: int, element: str, target: str) -> str:
     return f"{element} enchantment with power {power} cast on {target}"
 
-def partial_enchanter(base_enchantment: callable) -> dict[str, callable]:
+
+def partial_enchanter(base_enchantment: Callable) -> dict[str, Callable]:
     return {
         'fire_enchant': functools.partial(base_enchantment, 50, "fire"),
         'ice_enchant': functools.partial(base_enchantment, 50, 'ice'),
-        'lightning_enchant': functools.partial(base_enchantment, 50, 'lightning')
+        'lightning_enchant': functools.partial(
+            base_enchantment,
+            50,
+            'lightning',
+        ),
     }
 
+
 @functools.lru_cache(maxsize=None)
-def memoized_fibonacci(n):
+def memoized_fibonacci(n: int) -> int:
     if n < 0:
         raise ValueError("n must be >= 0")
     if n < 2:
         return n
     return memoized_fibonacci(n - 1) + memoized_fibonacci(n - 2)
 
-def spell_dispatcher():
-    @functools.singledispatch
-    def cast_spell(spell):
+
+def spell_dispatcher() -> Callable:
+    @singledispatch
+    def cast_spell(spell: object) -> str:
         return f"Unknown spell type: {type(spell).__name__}"
 
     @cast_spell.register
-    def _(spell: int):
+    def _(spell: int) -> str:
         return f"Damage spell deals {spell} damage"
 
     @cast_spell.register
-    def _(spell: str):
+    def _(spell: str) -> str:
         return f"Enchantment cast: {spell}"
 
     @cast_spell.register
-    def _(spell: list):
-        return f"Multi-cast spells: {', '.join(str(s) for s in spell)}"
+    def _(spell: list) -> str:
+        return (
+            f"Multi-cast spells: "
+            f"{', '.join(str(s) for s in spell)}"
+        )
 
     return cast_spell
 
 
-def test_functions():
+def test_functions() -> None:
     print("=== Testing partial_enchanter ===")
     enchants = partial_enchanter(base_enchantment)
 
     print(enchants['fire_enchant']("dragon"))
     print(enchants['ice_enchant']("goblin"))
     print(enchants['lightning_enchant']("wizard"))
-
 
     # import time
     # start = time.perf_counter()
